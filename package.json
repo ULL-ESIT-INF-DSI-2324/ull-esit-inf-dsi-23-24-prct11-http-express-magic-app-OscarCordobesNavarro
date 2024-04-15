@@ -1,0 +1,42 @@
+{
+  "name": "doc-test",
+  "version": "1.1.0",
+  "description": "",
+  "main": "basicFunctions.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc-watch --onSuccess \"node dist/magic-app.js\"",
+    "doc": "typedoc",
+    "test": "mocha",
+    "coverage": "c8 npm test && c8 report --reporter=lcov",
+    "start": "tsc && node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/chai": "^4.3.12",
+    "@types/mocha": "^10.0.6",
+    "@types/request": "^2.48.12",
+    "@types/yargs": "^17.0.32",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
+    "c8": "^9.1.0",
+    "chai": "^5.1.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "mocha": "^10.3.0",
+    "prettier": "^3.2.5",
+    "ts-node": "^10.9.2",
+    "tsc-watch": "^6.0.4",
+    "typedoc": "^0.25.10",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/node": "^20.11.29",
+    "chalk": "^5.3.0",
+    "request": "^2.88.2",
+    "typedoc-material-theme": "^1.0.2",
+    "yargs": "^17.7.2"
+  }
+}
