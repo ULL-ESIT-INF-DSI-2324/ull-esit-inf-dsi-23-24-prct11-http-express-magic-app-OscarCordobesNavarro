@@ -1,19 +1,24 @@
-import { error } from 'console';
 import express from 'express';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 
-app.get('', (_, res) => {
-  res.send('Hello World!');
-});
+const __dirname = join(dirname(fileURLToPath(import.meta.url)), '../src/public');
 
-// Middleware
+app.use(express.static(__dirname));
+
+// Middleware para que todas las peticiones pasen por acá
 app.use((req, res, next) => {
-    if (!req.url.startsWith('/cards')) {
-        return res.status(404).sendFile('404.html');
+    if(!req.url.startsWith('/cards')) {
+        res.sendFile(join(__dirname, '404.html'));
+        return;
     }
     next();
 });
+
+console.log(__dirname);
+
 
 app.get('/cards', (req, res) => {
     console.log(req.query);
