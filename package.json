@@ -9,13 +9,14 @@
     "doc": "typedoc",
     "test": "mocha",
     "coverage": "c8 npm test && c8 report --reporter=lcov",
-    "start": "tsc && node dist/index.js"
+    "start": "tsc && node dist/app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.3.12",
+    "@types/express": "^4.17.21",
     "@types/mocha": "^10.0.6",
     "@types/request": "^2.48.12",
     "@types/yargs": "^17.0.32",
@@ -35,6 +36,7 @@
   "dependencies": {
     "@types/node": "^20.11.29",
     "chalk": "^5.3.0",
+    "express": "^4.19.2",
     "request": "^2.88.2",
     "typedoc-material-theme": "^1.0.2",
     "yargs": "^17.7.2"
