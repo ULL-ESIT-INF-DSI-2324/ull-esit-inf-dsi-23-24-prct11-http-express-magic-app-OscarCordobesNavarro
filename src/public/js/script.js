@@ -1,3 +1,5 @@
+// Creditos a -> https://github.com/MjavadH/4X4-Collection
+
 const BLACKLISTED_KEY_CODES = [38,40,37,39,18,20,17,16,9,27,144];
 //List of commands
 const COMMANDS = {
