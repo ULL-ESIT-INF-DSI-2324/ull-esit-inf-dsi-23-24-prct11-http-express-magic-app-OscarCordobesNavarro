@@ -488,4 +488,39 @@ export class CardCollectionsHandlerAsync {
       }
     });
   }
+
+  public getCollection(callback: (error: Error | null, collection?: ICard[]) => void): void {
+    this.checkUserDirectory((err) => {
+      if (err) {
+        const error = new Error(chalk.red.bold("Collection not found"));
+        return callback(error, undefined);
+      } else {
+        fs.readdir(this.userDirectory, (err, files) => {
+          if (err) {
+            return callback(err, undefined);
+          }
+          if (files.length === 0) {
+            const error = new Error(chalk.red.bold("Collection is empty"));
+            return callback(error, undefined);
+          }
+          const collection: ICard[] = [];
+          let completed = 0;
+          for (const file of files) {
+            const filePath = path.join(this.userDirectory, file);
+            fs.readFile(filePath, "utf-8", (err, data) => {
+              if (err) {
+                return callback(err, undefined);
+              }
+              const card = JSON.parse(data) as ICard;
+              collection.push(card);
+              completed++;
+              if (completed === files.length) {
+                return callback(null, collection);
+              }
+            });
+          }
+        });
+      }
+    });
+  }
 }
