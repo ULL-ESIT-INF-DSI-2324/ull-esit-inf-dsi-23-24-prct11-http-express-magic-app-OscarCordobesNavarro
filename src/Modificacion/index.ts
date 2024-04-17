@@ -6,113 +6,250 @@
  * Curso: 3º
  * Autor: Óscar Cordobés Navarro
  * Correo: alu0101478081@ull.edu.es
- * Fecha: 16/04/2024
- * Práctica 11: Aplicación Express para coleccionistas de cartas Magic
+ * Fecha: 17/04/2024
+ * Práctica 11: Modificacion PE101
  */
 
-// PROMESAS
+import { ICard } from "./ICard.js";
+import { Color } from "./IColor.js";
+import fs from "fs";
+import path from "path";
+import chalk from "chalk";
 
-/**
- * Vemos que creamos una nueva promesa de tipo String, a esta promesa
- * se le pasa un manejador que recibe dos parámetros, resolve y reject.
- *
- * Si la ejecución de la promesa es exitosa, se llama a resolve con el
- * valor que queremos devolver, en este caso, "This is a successful response".
- *
- * Si la ejecución de la promesa falla, se llama a reject con el error que
- * queremos devolver.
- */
+export class CardCollectionsHandlerAsync {
+  private userCollectionPath: string = "./data/";
+  private userName: string = "";
+  private userDirectory: string = "";
 
-const myPromise = new Promise<string>((resolve, reject) => {
-  setTimeout(() => {
-    resolve("This is a successful response");
-  }, 1000);
-});
-
-/**
- * Para evaluar una promesa utiliza el método .then() con la promesa como
- * cumplida y el método .catch() con la promesa como rechazada.
- *
- * Con esto nos permite separar el código de éxito del código de error.
- */
-
-myPromise
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-
-/**
- * Hay que  tener en cuenta que las promesas solo se pueden resolver o rechazar.
- * Si se llama a resolve y reject, solo se ejecutará el primero que se llame.
- */
-
-// PROMESAS EN CADENA
-
-// Teniendo esta función
-
-/**
- * Vemos que retorna una promesa de tipo string
- */
-
-const concatenate = (firstString: string, secondString: string) => {
-  return new Promise<string>((resolve, reject) => {
-    setTimeout(() => {
-      if (firstString.length === 0 || secondString.length === 0) {
-        reject("Any of both arguments can be an empty string");
-      } else {
-        resolve(firstString + secondString);
+  constructor(userName?: string) {
+    if (userName) {
+      this.userName = userName;
+      this.userDirectory = path.join(this.userCollectionPath, this.userName);
+    }
+    // Creamos la carpeta data si no existe
+    fs.mkdir(this.userCollectionPath, { recursive: true }, (err) => {
+      if (err) {
+        console.log(chalk.red.bold("Error creating data folder"));
       }
-    }, 1000);
-  });
-};
-
-// Una primera aproximación para encadenar promesas sería la siguiente:
-concatenate("Hello ", "World!")
-  .then((myString) => {
-    concatenate(myString, " I am Eduardo")
-      .then((mySecondString) => {
-        console.log(mySecondString);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-
-/**
- * Vemos que se encadenan las promesas pero el código se vuelve
- * muy difícil de leer y de mantener.
- *
- * Si hacemos varias llamadas a concatenate, el código se vuelve
- * un completo infierno, ademas que no tiene sentido gestionar los
- * errores de esta manera.
- */
-
-// Para ello se pueden encadenar las promesas de la siguiente manera:
-
-concatenate("Hola ", "Mundo")
-  .then((myString) => {
-    return concatenate(myString, " Soy Pablo").then((mySecondString) => {
-      return concatenate(mySecondString, " y me gusta la programación").then(
-        (myThirdString) => {
-          console.log(myThirdString);
-        },
-      );
     });
-  })
-  .catch((error) => {
-    console.log(error + "Error de manual");
-  });
+  }
 
-/**
- * Con esto lo que estamos haciendo es devolver la promesa de la siguiente
- * llamada a la función, de esta manera podemos encadenar las promesas.
- *
- * Y solo tenemos que gestionar los errores en un único catch. Ya que
- * se propagan los errores.
- */
+  /**
+   * Devuelve el directorio de colección del usuario.
+   *
+   * @returns El directorio de colección del usuario.
+   */
+  public getUserCollectionDirectory(): string {
+    return this.userDirectory;
+  }
+
+  /**
+   * Devuelve el nombre de usuario.
+   *
+   * @returns El nombre de usuario.
+   */
+  public getUsername(): string {
+    return this.userName;
+  }
+
+  /**
+   * Actualiza el nombre de usuario.
+   *
+   * @param newUser El nuevo nombre de usuario.
+   */
+  public updateUser(newUser: string): void {
+    this.userName = newUser;
+    this.userDirectory = path.join(this.userCollectionPath, this.userName);
+  }
+
+  /**
+   * Devuelve el path de la carta.
+   *
+   * @param id El id de la carta.
+   * @returns El path de la carta.
+   */
+  private getCardFilePath(id: number): string {
+    return path.join(this.userDirectory, `${id}.json`);
+  }
+
+  /**
+   * Imprime los detalles de una carta en la consola.
+   *
+   * @param card - La carta a imprimir.
+   */
+  private printCard(card: ICard): void {
+    const colorName = Object.keys(Color).find(
+      (key) => Color[key as keyof typeof Color] === card.color,
+    );
+    console.log(
+      "\n " + chalk.blue.bold("Card ID: ") + card.id + "\n",
+      chalk.blue.bold("Card Name: ") + card.name + "\n",
+      chalk.blue.bold("Card Mana Cost: ") + card.manaCost + "\n",
+      chalk.hex(card.color).bold("Card Color: ") + colorName + "\n",
+      chalk.blue.bold("Card Type Line: ") + card.lineType + "\n",
+      chalk.blue.bold("Card Rarity: ") + card.rarity + "\n",
+      chalk.blue.bold("Card Rules Text: ") + card.ruleText + "\n",
+      chalk.blue.bold("Card Market Value: ") + card.marketValue + "\n",
+    );
+  }
+
+
+  public addCard(card: ICard): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      if (card.lineType === "Creature" && (!card.strength || !card.endurance)) {
+        reject(
+          new Error(
+            chalk.red.bold("Creature card must have strength and endurance"),
+          ),
+        );
+      }
+      if (card.lineType === "Planeswalker" && !card.brandsLoyalty) {
+        reject(
+          new Error(
+            chalk.red.bold("Planeswalker card must have brands loyalty"),
+          ),
+        );
+      }
+      this.writeCardToFile(card)
+        .then(() => {
+          resolve();
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  private writeCardToFile(card: ICard): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.checkUserDirectory()
+        .then(() => {
+          this.checkCardFileAndWrite(card).then(() => {
+            resolve();
+          });
+        })
+        .catch((err) => {
+          // Creamos el directorio si no existe y escribimos la carta
+          fs.promises
+            .mkdir(this.userDirectory)
+            .then(() => {
+              this.checkCardFileAndWrite(card)
+                .then(() => {
+                  resolve();
+                })
+                .catch((err) => {
+                  reject(err);
+                });
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        });
+    });
+  }
+
+  private checkCardFileAndWrite(card: ICard): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const filePath = this.getCardFilePath(card.id);
+      const data = JSON.stringify(card, undefined, 2);
+      this.checkCardFile(card.id).then(() => {
+        fs.promises
+          .writeFile(filePath, data)
+          .then(() => {
+            resolve();
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      });
+    });
+  }
+
+  private checkUserDirectory(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      fs.promises
+        .access(this.userDirectory, fs.constants.F_OK)
+        .then(() => {
+          resolve();
+        })
+        .catch(() => {
+          const error = new Error(chalk.red.bold("Collection not found"));
+          reject(error);
+        });
+    });
+  }
+
+  private checkCardFile(id: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const filePath = this.getCardFilePath(id);
+
+      fs.promises
+        .access(filePath, fs.constants.F_OK)
+        .then(() => {
+          const error = new Error(
+            chalk.red.bold(
+              `Card already exists at ${this.userName} collection`,
+            ),
+          );
+          reject(error);
+        })
+        .catch(() => {
+          resolve();
+        });
+    });
+  }
+
+  public removeCard(id: number): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const filePath = this.getCardFilePath(id);
+
+      this.checkUserDirectory()
+        .then(() => {
+          fs.promises
+            .access(filePath, fs.constants.F_OK)
+            .then(() => {
+              fs.promises
+                .unlink(filePath)
+                .then(() => {
+                  resolve();
+                })
+                .catch((err) => {
+                  reject(err);
+                });
+            })
+            .catch((err) => {
+              const error = new Error(
+                chalk.red.bold(`Card not found at ${this.userName} collection`),
+              );
+              reject(error);
+            });
+        })
+        .catch((err) => {
+          const error = new Error(chalk.red.bold("Collection not found"));
+          reject(error);
+        });
+    });
+  }
+
+  public clearCollection(): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      fs.promises
+        .access(this.userDirectory, fs.constants.F_OK)
+        .then(() => {
+          fs.promises
+            .rm(this.userDirectory, { recursive: true })
+            .then(() => {
+              resolve();
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        })
+        .catch(() => {
+          resolve();
+        });
+    });
+  }
+}
+
+
