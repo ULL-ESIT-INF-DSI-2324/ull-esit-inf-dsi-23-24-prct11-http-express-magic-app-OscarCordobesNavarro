@@ -385,16 +385,35 @@ export class CardCollectionsHandlerAsync {
         const error = new Error(chalk.red.bold("Collection not found"));
         return callback(error);
       } else {
-        this.removeCard(id, (err) => {
-          if (err) {
-            return callback(err);
+        // Obtenemos la carta a actualizar
+        this.getCard(id, (error, oldCard) => {
+          if (error) {
+            return callback(error);
+          } else {
+            // Hacemos una mezcla de las propiedades de la carta antigua y la nueva, para mantener las propiedades no modificadas
+            // Si la propiedad no está en la nueva carta, se mantiene la antigua
+            const updatedCard: ICard = {
+              id: card.id,
+              name: card.name ?? oldCard?.name ?? "",
+              manaCost: card.manaCost ?? oldCard?.manaCost ?? 0,
+              color: card.color ?? oldCard?.color ?? "",
+              lineType: card.lineType ?? oldCard?.lineType ?? "",
+              rarity: card.rarity ?? oldCard?.rarity ?? "",
+              ruleText: card.ruleText ?? oldCard?.ruleText ?? "",
+              strength: card.strength ?? oldCard?.strength ?? undefined,
+              endurance: card.endurance ?? oldCard?.endurance ?? undefined,
+              brandsLoyalty: card.brandsLoyalty ?? oldCard?.brandsLoyalty ?? undefined,
+              marketValue: card.marketValue ?? oldCard?.marketValue ?? 0,
+            };
+            // Eliminamos la carta antigua
+            this.removeCard(id, (error) => {
+              if (error) {
+                return callback(error);
+              }
+              // Escribimos la carta actualizada
+              this.writeCardToFile(updatedCard, callback);
+            });
           }
-          this.writeCardToFile(card, (err) => {
-            if (err) {
-              return callback(err);
-            }
-            return callback(null);
-          });
         });
       }
     });
