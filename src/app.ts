@@ -20,23 +20,19 @@ import { TypeLine } from "./dataAPI/ITypeLine.js";
 import { Rarity } from "./dataAPI/IRarity.js";
 import { Color } from "./dataAPI/IColor.js";
 
-export type ErrorMessage = {
-  error: string;
-};
-
-export type SuccessMessage = {
-  data: string;
-};
-
+// Creamos la aplicación express
 const app = express();
 
+// Definimos __dirname para poder acceder a la carpeta public
 const __dirname = join(
   dirname(fileURLToPath(import.meta.url)),
   "../src/public",
 );
 
+// Middleware para que se pueda acceder a req.body
 app.use(express.json());
 
+// Middleware para que se pueda acceder a la carpeta public
 app.use(express.static(__dirname));
 
 // Middleware para que todas las peticiones pasen por aquí
@@ -48,9 +44,10 @@ app.use((req, res, next) => {
   next();
 });
 
-console.log(__dirname);
 
-// Para las peticiones get a la raíz de la aplicación
+/**
+ * Manejador del endpoint /cards para solicitudes GET
+ */
 app.get("/cards", (req, res) => {
   // Si se proporciona entre 1 y 2 parámetros
   if (Object.keys(req.query).length > 0 && Object.keys(req.query).length < 3) {
@@ -125,21 +122,16 @@ app.get("/cards", (req, res) => {
         }
       });
     } else {
-      const errorMessage: ErrorMessage = {
-        error:
-          "Se han proporcionado 2 parámetros pero no son los correctos, recuerda que se requiere name e id(numero)",
-      };
-      res.send(errorMessage);
+      res.send({error: "Se han proporcionado 2 parámetros pero no son los correctos, recuerda que se requiere name e id(numero)"});
     }
   } else {
-    const errorMessage: ErrorMessage = {
-      error:
-        "No se han proporcionado los parámetros necesarios, recuerda que se requiere de 1 a 2 parámetros",
-    };
-    res.send(errorMessage);
+    res.send({ error: "No se han proporcionado los parámetros necesarios, recuerda que se requiere de 1 a 2 parámetros" });
   }
 });
 
+/**
+ * Manejador del endpoint /cards para solicitudes POST
+ */
 app.post("/cards", (req, res) => {
   // Comprobar que el usuario se está indicando en la queryString y que es solo un parámetro
   if (Object.keys(req.query).length == 1 && req.query.name) {
@@ -201,27 +193,23 @@ app.post("/cards", (req, res) => {
                 ".",
             ),
           );
-          res.send("La carta se ha añadido correctamente");
+          res.send({ data: "La carta se ha añadido correctamente" });
           return;
         }
       });
     } else {
-      const errorMessage: ErrorMessage = {
-        error: "No se ha enviado ninguna carta en el body",
-      };
-      res.send(errorMessage);
+      res.send({error: "No se ha enviado ninguna carta en el body"});
       return;
     }
   } else {
-    const errorMessage: ErrorMessage = {
-      error:
-        "No se ha proporcionado el parámetro name en la queryString o se han proporcionado más parámetros de los necesarios",
-    };
-    res.send(errorMessage);
+    res.send({error: "No se ha proporcionado el parámetro name en la queryString o se han proporcionado más parámetros de los necesarios"});
     return;
   }
 });
 
+/**
+ * Manejador del endpoint /cards para solicitudes DELETE
+ */
 app.delete("/cards", (req, res) => {
   //Comprobamos que se ha proporcionado el parámetro name y id en la queryString
   if (Object.keys(req.query).length == 2 && req.query.name && req.query.id) {
@@ -255,23 +243,19 @@ app.delete("/cards", (req, res) => {
               " se ha eliminado correctamente.",
           ),
         );
-        const successMessage: SuccessMessage = {
-          data: "La carta se ha eliminado correctamente",
-        };
-        res.send(successMessage);
+        res.send({data: "La carta se ha eliminado correctamente"});
         return;
       }
     });
   } else {
-    const errorMessage: ErrorMessage = {
-      error:
-        "No se han proporcionado los parámetros necesarios, recuerda que se requiere name e id",
-    };
-    res.send(errorMessage);
+    res.send({error: "No se han proporcionado los parámetros necesarios, recuerda que se requiere name e id"});
     return;
   }
 });
 
+/**
+ * Manejador del endpoint /cards para solicitudes PATCH
+ */
 app.patch("/cards", (req, res) => {
   // Comprobar que tanto el id como el name se han proporcionado en la queryString
   if (Object.keys(req.query).length == 2 && req.query.name && req.query.id) {
@@ -321,9 +305,6 @@ app.patch("/cards", (req, res) => {
         ruleText: req.body.ruleText,
         marketValue: req.body.marketValue,
       };
-
-      // FALTA MODIFICAR EL MÉTODO DE UPDATE, PARA OBTENER LA CARTA Y HACER UNA
-      // FUSION DE LA CARTA QUE YA SE TENIA Y LA QUE SE TIENE QUE MODIFICAR
       handler.updateCard(carta, idNumber, (error) => {
         if (error) {
           console.log(
@@ -348,27 +329,21 @@ app.patch("/cards", (req, res) => {
                 " se ha actualizado correctamente.",
             ),
           );
-          res.send("La carta se ha actualizado correctamente");
+          res.send({ data: "La carta se ha actualizado correctamente" });
           return;
         }
       });
     } else {
-      const errorMessage: ErrorMessage = {
-        error: "No se ha enviado ninguna carta en el body",
-      };
-      res.send(errorMessage);
+      res.send({error: "No se ha enviado ninguna carta en el body"});
       return;
     }
   } else {
-    const errorMessage: ErrorMessage = {
-      error:
-        "No se ha proporcionado el parámetro name en la queryString o se han proporcionado más parámetros de los necesarios",
-    };
-    res.send(errorMessage);
+    res.send({error: "No se ha proporcionado el parámetro name en la queryString o se han proporcionado más parámetros de los necesarios"});
     return;
   }
 });
 
+// Iniciamos el servidor en el puerto 3000
 app.listen(3000, () => {
   console.log("Server is up on port 3000");
 });

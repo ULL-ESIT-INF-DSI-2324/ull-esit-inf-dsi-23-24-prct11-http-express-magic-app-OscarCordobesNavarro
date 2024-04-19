@@ -132,42 +132,42 @@ const carta10: ICard = {
 
 const handler = new CardCollectionsHandlerAsync("oscar");
 
-// handler.addCard(carta1, (error) => {
-//   if (error) {
-//     console.log(error);
-//   } else {
-//     console.log("Carta añadida correctamente");
-//   }
-// });
-
-// handler.addCard(carta2, (error) => {
-//   if (error) {
-//     console.log(error);
-//   } else {
-//     console.log("Carta añadida correctamente");
-//   }
-// });
-
-// handler.addCard(carta3, (error) => {
-//   if (error) {
-//     console.log(error);
-//   } else {
-//     console.log("Carta añadida correctamente");
-//   }
-// });
-
-// handler.addCard(carta4, (error) => {
-//   if (error) {
-//     console.log(error);
-//   } else {
-//     console.log("Carta añadida correctamente");
-//   }
-// });
-
-handler.getCollection((error, collection) => {
+handler.addCard(carta1, (error) => {
   if (error) {
     console.log(error);
   } else {
-    console.log(collection);
+    console.log("Carta añadida correctamente");
   }
 });
+
+handler.addCard(carta2, (error) => {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Carta añadida correctamente");
+  }
+});
+
+handler.addCard(carta3, (error) => {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Carta añadida correctamente");
+  }
+});
+
+handler.addCard(carta4, (error) => {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Carta añadida correctamente");
+  }
+});
+
+// handler.getCollection((error, collection) => {
+//   if (error) {
+//     console.log(error);
+//   } else {
+//     console.log(collection);
+//   }
+// });

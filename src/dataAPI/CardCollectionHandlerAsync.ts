@@ -508,6 +508,13 @@ export class CardCollectionsHandlerAsync {
     });
   }
 
+  /**
+   * Obtiene la colección de cartas del usuario.
+   * 
+   * @param callback - Una función de devolución de llamada que se invoca con el resultado de la operación.
+   *                   En este caso el resultado es la colección de cartas en forma de array ICard.
+   *                   Recibe un error en caso de fallo o la colección de cartas en caso de éxito.
+   */
   public getCollection(callback: (error: Error | null, collection?: ICard[]) => void): void {
     this.checkUserDirectory((err) => {
       if (err) {
