@@ -1,4 +1,4 @@
-import { CardCollectionsHandlerAsync } from "./dataAPI/CardCollectionHandlerAsync.js";
+import { CardCollectionsHandlerAsync } from "./dataAPI/CardCollectionsHandlerAsync.js";
 import { ICard } from "./dataAPI/ICard.js";
 import { Color } from "./dataAPI/IColor.js";
 import { TypeLine } from "./dataAPI/ITypeLine.js";

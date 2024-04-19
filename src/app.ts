@@ -12,7 +12,7 @@
 import express from "express";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
-import { CardCollectionsHandlerAsync } from "./dataAPI/CardCollectionHandlerAsync.js";
+import { CardCollectionsHandlerAsync } from "./dataAPI/CardCollectionsHandlerAsync.js";
 import chalk from "chalk";
 import stripAnsi from "strip-ansi";
 import { ICard } from "./dataAPI/ICard.js";
@@ -21,7 +21,7 @@ import { Rarity } from "./dataAPI/IRarity.js";
 import { Color } from "./dataAPI/IColor.js";
 
 // Creamos la aplicación express
-const app = express();
+export const app = express();
 
 // Definimos __dirname para poder acceder a la carpeta public
 const __dirname = join(
