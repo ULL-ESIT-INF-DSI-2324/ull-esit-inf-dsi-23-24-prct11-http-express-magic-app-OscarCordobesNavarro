@@ -141,6 +141,12 @@ app.post("/cards", (req, res) => {
         req.query.name.toString(),
       );
 
+      // Comprobar que tenga los parámetros minimos de una ICard
+      if (!req.body.id || !req.body.name || !req.body.manaCost || !req.body.color || !req.body.lineType || !req.body.rarity || !req.body.ruleText || !req.body.marketValue) {
+        res.send({ error: "No se han proporcionado todos los parámetros necesarios, recuerda que se requiere id, name, manaCost, color, lineType, rarity, ruleText y marketValue" });
+        return;
+      }
+
       // Pasamos la string de color a un color de IColor
       const color = Color[req.body.color as keyof typeof Color];
       const typeLine = TypeLine[req.body.lineType as keyof typeof TypeLine];
