@@ -24,6 +24,8 @@ jobs:
           node-version: 21.x
       - name: Installing dependencies
         run: npm ci
+      - name: Starting server
+        run: npm run start
       - name: Generating coverage report
         run: npm run coverage
       - name: SonarCloud Scan
