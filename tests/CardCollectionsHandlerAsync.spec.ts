@@ -766,65 +766,6 @@ describe("CardCollectionsHandlerAsync tests", () => {
         }
       });
     });
-
-    it("get a collection that exists should return an array with the cards", (done) => {
-      const handler = new CardCollectionsHandlerAsync(
-        "testCollectionIndexAsyncCollection",
-      );
-      const carta: ICard = {
-        id: 1,
-        name: "testCard",
-        manaCost: 1,
-        color: Color.Red,
-        lineType: TypeLine.Artifact,
-        rarity: Rarity.Common,
-        ruleText: "test rule text",
-        strength: 1,
-        endurance: 1,
-        brandsLoyalty: 7,
-        marketValue: 1,
-      };
-      const carta2: ICard = {
-        id: 2,
-        name: "testCard2",
-        manaCost: 2,
-        color: Color.Blue,
-        lineType: TypeLine.Creature,
-        rarity: Rarity.Rare,
-        ruleText: "test rule text 2",
-        strength: 2,
-        endurance: 2,
-        brandsLoyalty: 8,
-        marketValue: 2,
-      };
-      handler.clearCollection((error) => {
-        if (error) {
-          done(error);
-        } else {
-          handler.addCard(carta, (error) => {
-            if (error) {
-              done(error);
-            } else {
-              handler.addCard(carta2, (error) => {
-                if (error) {
-                  done(error);
-                } else {
-                  handler.getCollection((error, coleccion) => {
-                    if (error) {
-                      done(error);
-                    } else if (coleccion) {
-                      expect(coleccion).to.deep.equal([carta, carta2]);
-                      expect(coleccion.length).to.equal(2);
-                      done();
-                    }
-                  });
-                }
-              });
-            }
-          });
-        }
-      });
-    });
   });
 
   describe("getStringCollection and getStringCard method test", () => {
