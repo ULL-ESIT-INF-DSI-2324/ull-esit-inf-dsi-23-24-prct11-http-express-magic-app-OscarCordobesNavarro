@@ -967,7 +967,6 @@ describe("CardCollectionsHandlerAsync tests", () => {
         }
       });
     });
-
   });
 
 });
