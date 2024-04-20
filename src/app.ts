@@ -21,7 +21,7 @@ import { Rarity } from "./dataAPI/IRarity.js";
 import { Color } from "./dataAPI/IColor.js";
 
 // Creamos la aplicación express
-export const app = express();
+const app = express();
 
 // Definimos __dirname para poder acceder a la carpeta public
 const __dirname = join(
