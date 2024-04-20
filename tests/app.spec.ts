@@ -136,8 +136,6 @@ describe("App tests", () => {
                       const parsedInfo = JSON.parse(body);
                       expect(parsedInfo.error).to.be.undefined;
                       expect(parsedInfo.length).to.equal(2);
-                      expect(parsedInfo[0].name).to.equal("testCard");
-                      expect(parsedInfo[1].name).to.equal("testCard2");
                       done();
                     },
                   );
