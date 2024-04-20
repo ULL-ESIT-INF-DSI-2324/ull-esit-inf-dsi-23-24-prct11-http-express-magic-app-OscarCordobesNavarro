@@ -9,7 +9,7 @@
     "doc": "typedoc",
     "test": "mocha",
     "coverage": "c8 npm test && c8 report --reporter=lcov",
-    "start": "tsc && node dist/app.js"
+    "start": "tsc && node dist/app.js &"
   },
   "keywords": [],
   "author": "",
