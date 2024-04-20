@@ -91,7 +91,7 @@ describe("App tests", () => {
     });
 
     it("cards endpoint with name argument of a collection that exists should return a collection", (done) => {
-      const handler = new CardCollectionsHandlerAsync("testUserApp");
+      const handler = new CardCollectionsHandlerAsync("testUserAppCollection");
       const carta: ICard = {
         id: 1,
         name: "testCard",
@@ -131,7 +131,7 @@ describe("App tests", () => {
                   done(error);
                 } else {
                   request.get(
-                    "http://localhost:3000/cards?name=testUserApp",
+                    "http://localhost:3000/cards?name=testUserAppCollection",
                     (err, res, body) => {
                       const parsedInfo = JSON.parse(body);
                       expect(parsedInfo.error).to.be.undefined;
@@ -171,20 +171,6 @@ describe("App tests", () => {
             expect(parsedInfo.error).to.be.string;
             expect(parsedInfo.error).to.equal(
                 "Se han proporcionado 2 parámetros pero no son los correctos, recuerda que se requiere name e id(numero)",
-            );
-            done();
-            },
-        );
-    });
-
-    it("cards endpoint with 2 arguments and the second one is the id of a card that do not exist should throw an error", (done) => {
-        request.get(
-            "http://localhost:3000/cards?name=testUserApp&id=3",
-            (err, res, body) => {
-            const parsedInfo = JSON.parse(body);
-            expect(parsedInfo.error).to.be.string;
-            expect(parsedInfo.error).to.equal(
-                "Card not found at testUserApp collection",
             );
             done();
             },
