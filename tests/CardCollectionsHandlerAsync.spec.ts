@@ -699,7 +699,7 @@ describe("CardCollectionsHandlerAsync tests", () => {
   });
 
   it("list a collection with cards should return an array with the cards", (done) => {
-    const handler = new CardCollectionsHandlerAsync("testCollectionIndexAsync");
+    const handler = new CardCollectionsHandlerAsync("testCollectionIndexAsyncCollection");
     const carta: ICard = {
       id: 1,
       name: "testCard",
