@@ -1,6 +1,6 @@
 {
   "entryPoints": [
-      "./src/*.ts",
+      "./src/*/*.ts",
   ],
   "out": "./docs",
   "name": "💻 Práctica 11 - Aplicación Express para coleccionistas de cartas Magic 💻",
